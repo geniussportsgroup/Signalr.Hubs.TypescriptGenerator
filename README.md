@@ -270,6 +270,7 @@ The long name must be prepended by double hyphen ('*--*'). Below is the list of 
 | -s, --strictTypes       | Default: *False*. If true, union definitions with *null* are generated for nullable types. |
 | -n, --notNullableTypes  | Default: *None*. Specifies method to discover members treated as not-nullable. Supported values:<br>*None* - don't generate optional members.<br>*RequiredAttribute* - use [Required] attribute. |
 | -i, --includeTypes      | Default: *None*. Specifies methods to discover additional types to be included. Supported values:<br>*None* - don't look for additional types. <br>*KnownTypeAttribute* - include classes declared with [KnownType] attribute in data contracts included. |
+| -e, --enumMemberNames   | Default: *Default*. If specified,indicates method to map enum member names. Valid values: Default,CamelCase,LowerCase,UpperCase,EnumMemberAttribute. |
 | --help                  | Display help screen.
 
 If the output file is not specified the result is written to standard out.
