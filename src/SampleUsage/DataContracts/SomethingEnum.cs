@@ -15,7 +15,7 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.SampleUsage.DataContract
 		Two = 202,
 
 		[Obsolete("Do not use this value. Defined for backward compatibility.")]
-		[EnumMember]
+		[EnumMember(Value = "oneAndTwo")]
 		Three = One + Two
 	}
 }

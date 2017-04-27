@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using GeniusSports.Signalr.Hubs.TypeScriptGenerator.Models;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -76,11 +77,11 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 
 		public List<ClientInfo> GetClients()
 		{
-		    return (from hub in hubmanager.GetHubs()
-                    select hub.HubType into hubType
-                    let clientType = typeHelper.ClientType(hubType)
-                    where clientType != null
-                    select new ClientInfo(clientType.Name, clientType.Namespace, typeHelper.GetClientMethods(hubType))).ToList();
+			return (from hub in hubmanager.GetHubs()
+					select hub.HubType into hubType
+					let clientType = typeHelper.ClientType(hubType)
+					where clientType != null
+					select new ClientInfo(clientType.Name, clientType.Namespace, typeHelper.GetClientMethods(hubType))).ToList();
 		}
 
 		public List<DataContractInfo> GetDataContracts()
@@ -132,12 +133,39 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 			return list;
 		}
 
-		private static EnumMemberInfo GetEnumMemberInfo(Type enumType, string memberName)
+		private EnumMemberInfo GetEnumMemberInfo(Type enumType, string memberName)
 		{
 			var enumMember = enumType.GetField(memberName);
 
 			string reasonDeprecated;
 			var isDeprecated = enumMember.IsDeprecated(out reasonDeprecated);
+
+			switch (typeHelper.Options.EnumMemberNameMappingMode)
+			{
+				case EnumMemberNameMappingMode.MemberName:
+					// Take memberName as is.
+					break;
+
+				case EnumMemberNameMappingMode.MemberNameCamelCase:
+					memberName = char.ToLowerInvariant(memberName[0]) + memberName.Substring(1);
+					break;
+
+				case EnumMemberNameMappingMode.MemberNameLowerCase:
+					memberName = memberName.ToLowerInvariant();
+					break;
+
+				case EnumMemberNameMappingMode.MemberNameUpperCase:
+					memberName = memberName.ToUpperInvariant();
+					break;
+
+				case EnumMemberNameMappingMode.EnumMemberAttributeValue:
+				{
+					var attr = enumMember.GetCustomAttribute<EnumMemberAttribute>();
+					if (!string.IsNullOrWhiteSpace(attr?.Value))
+						memberName = attr.Value;
+					break;
+				}
+			}
 
 			return new EnumMemberInfo(
 				memberName, isDeprecated, reasonDeprecated,

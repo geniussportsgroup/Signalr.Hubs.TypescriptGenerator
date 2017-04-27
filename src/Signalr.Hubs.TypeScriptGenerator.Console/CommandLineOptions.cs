@@ -28,6 +28,9 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console
 		[Option('i', "includeTypes", HelpText = "Specifies methods to discover additional types to be included. KnownTypeAttribute - include classes declared with [KnownType] attribute.", Required = false)]
 		public string IncludeTypes { get; set; }
 
+		[Option('e', "enumMemberMames", HelpText = "If specified,indicates method to map enum member names. Valid values: Default,CamelCase,LowerCase,UpperCase,EnumMemberAttribute.", Required = false, DefaultValue= "Default")]
+		public string EnumMemberNameMapMode { get; set; }
+
 		[HelpOption]
 		public string GetUsage()
 		{
@@ -85,6 +88,28 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console
 
 				default:
 					throw new NotSupportedException($"Specified included types discovery option is not supported: {IncludeTypes}");
+			}
+		}
+
+		public EnumMemberNameMappingMode GetEnumMemberNameMappingMode()
+		{
+			if (string.IsNullOrEmpty(EnumMemberNameMapMode))
+				return EnumMemberNameMappingMode.MemberName;
+
+			switch (EnumMemberNameMapMode.ToLowerInvariant())
+			{
+				case "default":
+					return EnumMemberNameMappingMode.MemberName;
+				case "camelcase":
+					return EnumMemberNameMappingMode.MemberNameCamelCase;
+				case "lowercase":
+					return EnumMemberNameMappingMode.MemberNameLowerCase;
+				case "uppercase":
+					return EnumMemberNameMappingMode.MemberNameUpperCase;
+				case "enummemberattribute":
+					return EnumMemberNameMappingMode.EnumMemberAttributeValue;
+				default:
+					throw new NotSupportedException($"Specified enum member name mapping mode option is not supported: {EnumMemberNameMapMode}");
 			}
 		}
 

@@ -1,4 +1,5 @@
-﻿using GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console;
+﻿using GeniusSports.Signalr.Hubs.TypeScriptGenerator;
+using GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console;
 using NUnit.Framework;
 
 namespace Signalr.Hubs.TypeScriptGenerator.Console.Tests
@@ -63,6 +64,48 @@ namespace Signalr.Hubs.TypeScriptGenerator.Console.Tests
 
             // Assert
             Assert.That(outputPath, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        [TestCase("Default", EnumMemberNameMappingMode.MemberName)]
+        [TestCase("DEFAULT", EnumMemberNameMappingMode.MemberName)]
+        [TestCase("default", EnumMemberNameMappingMode.MemberName)]
+        [TestCase("LowerCase", EnumMemberNameMappingMode.MemberNameLowerCase)]
+        [TestCase("LOWERCASE", EnumMemberNameMappingMode.MemberNameLowerCase)]
+        [TestCase("lowercase", EnumMemberNameMappingMode.MemberNameLowerCase)]
+        [TestCase("UpperCase", EnumMemberNameMappingMode.MemberNameUpperCase)]
+        [TestCase("UPPERCASE", EnumMemberNameMappingMode.MemberNameUpperCase)]
+        [TestCase("uppercase", EnumMemberNameMappingMode.MemberNameUpperCase)]
+        [TestCase("CamelCase", EnumMemberNameMappingMode.MemberNameCamelCase)]
+        [TestCase("CAMELCASE", EnumMemberNameMappingMode.MemberNameCamelCase)]
+        [TestCase("camelcase", EnumMemberNameMappingMode.MemberNameCamelCase)]
+        [TestCase("EnumMemberAttribute", EnumMemberNameMappingMode.EnumMemberAttributeValue)]
+        [TestCase("ENUMMEMBERATTRIBUTE", EnumMemberNameMappingMode.EnumMemberAttributeValue)]
+        [TestCase("enummemberattribute", EnumMemberNameMappingMode.EnumMemberAttributeValue)]
+        public void GetEnumMemberNameMappingMode_WhenVAlidOptionSpecified(string suppliedOutput, EnumMemberNameMappingMode expectedOutput)
+        {
+            // Arrange
+            var sut = GetSut();
+            sut.EnumMemberNameMapMode = suppliedOutput;
+
+            // Act
+            var mode = sut.GetEnumMemberNameMappingMode();
+
+            // Assert
+            Assert.That(mode, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void GetEnumMemberNameMappingMode_WhenOptionNotSpecified_ResultsInMemberNameAsDefault()
+        {
+            // Arrange
+            var sut = GetSut();
+
+            // Act
+            var mode = sut.GetEnumMemberNameMappingMode();
+
+            // Assert
+            Assert.That(mode, Is.EqualTo(EnumMemberNameMappingMode.MemberName));
         }
     }
 }

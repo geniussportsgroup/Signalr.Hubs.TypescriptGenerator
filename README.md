@@ -43,6 +43,8 @@ Several options are provided via *TypeScriptGeneratorOptions* class to enable mo
  - OptionalMemberGenerationMode
  - GenerateStrictTypes
  - NotNullableTypeDiscovery
+ - IncludedTypesDiscovery
+ - EnumMemberNameMappingMode
 
 The static *Default* property returns the instance having all options initialized with default values. It also 
 provides set of customization methods designed for *fluent* coding style. The below example should be quite 
@@ -173,6 +175,85 @@ When generated using *NotNullableTypeDiscovery.UseRequiredAttribute*:
         clientCode : number | null;
     }
 
+##### IncludedTypesDiscovery
+Defines methods to discover types that should be included in the generated type script (when not used directly in the 
+Hub interface method arguments). This is useful for example, to generate interfaces for derived types, when base type 
+references are passed to Hub methods.
+
+- *IncludedTypesDiscovery.None* - Do not include any types other than directly used in Hub interface methods. (Default.)
+- *IncludedTypesDiscovery.UseKnownTypeAttribute* - Generate interfaces for types declared in the [KnownType] attribute 
+  in any of types directly used in Hub methods.
+
+Example C# code: 
+
+    [DataContract]
+    [KnownType(typeof(InheritedSomethingDto))]
+    public class SomethingDto
+    {
+        [DataMember]
+        public string Property1 { get; set; }
+    }
+
+    [DataContract]
+    public class InheritedSomethingDto : SomethingDto
+    {
+        [DataMember]
+        public int OptionalInteger { get; set; }
+    }
+
+    public interface IHubAClient
+    {
+        void TakeThis(SomethingDto somethingDto);
+    }
+
+
+When generated using *IncludedTypesDiscovery.None*, typings will contain defintiions for
+
+    interface SomethingDto { ... }
+    interface IHubAClient { ... }
+
+When generated using *NotNullableTypeDiscovery.UseKnownTypeAttribute*, typings will contain defintiions for
+
+    interface SomethingDto { ... }
+    interface InheritedSomethingDto { ... }
+    interface IHubAClient { ... }
+
+##### EnumMemberNameMappingMode
+Defines supported methods for mapping .NET model enum member name to name of enum member in generated typings.
+
+- *MemberName* - use enum member name as defined (Default).
+- *MemberNameCamelCase* - use enum member name with first letter in lower case (camel-case).
+- *MemberNameLowerCase* - use enum member name converted to lower case.
+- *MemberNameUpperCase* - use enum member name converted to upper case.
+- *EnumMemberAttributeValue* - use the value of the *System.Runtime.Serialization.EnumMemberAttribute* if applied to enum meber.
+  If the attribute is not defined, fall back to *MemberName* option.
+
+Example C# code:
+
+    public enum SomethingEnum
+    {
+        One = 101,
+        Two = 202,
+        [EnumMember(Value = "oneAndTwo")]
+        Three = One + Two
+    }
+
+When generated using *EnumMemberNameMappingMode.MemberName*:
+
+    enum SomethingEnum {
+        One = 101,
+        Two = 202,
+        Three = 303
+    }
+
+When generated using *EnumMemberNameMappingMode.EnumMemberAttributeValue*:
+
+    enum SomethingEnum {
+        One = 101,
+        Two = 202,
+        oneAndTwo = 303
+    }
+
 ### Signalr.Hubs.TypeScriptGenerator.Console
 Can be used to generate TypeScipt by supplying input from command line.
 
@@ -259,7 +340,9 @@ following code:
             @"../signalr/index.d.ts",
             @"../jquery/index.d.ts")
         .WithStrictTypes(NotNullableTypeDiscovery.UseRequiredAttribute)
-        .WithOptionalMembers(OptionalMemberGenerationMode.UseDataMemberAttribute);
+        .WithOptionalMembers(OptionalMemberGenerationMode.UseDataMemberAttribute)
+        .WithIncludedTypes(IncludedTypesDiscovery.UseKnownTypeAttribute)
+        .WithEnumMemberNameMappingMode(EnumMemberNameMappingMode.EnumMemberAttributeValue);
     var typeScript = hubTypeScriptGenerator.Generate(options);
 
 
@@ -274,12 +357,14 @@ following code:
     // Changes to this file may cause incorrect behavior and will be lost if
     // the code is regenerated.
     //
-    // 2016-12-02 13:00:02Z
+    // 2017-04-27 09:25:08Z
     // https://github.com/geniussportsgroup/Signalr.Hubs.TypeScriptGenerator
     //
     // </auto-generated>
     //------------------------------------------------------------------------------
 
+    /// <reference path="../signalr/index.d.ts" />
+    /// <reference path="../jquery/index.d.ts" />
 
     // Hubs
 
@@ -434,7 +519,7 @@ following code:
             /*
              * @deprecated Do not use this value. Defined for backward compatibility.
              */
-            Three = 303,
+            oneAndTwo = 303,
         }
 
         enum Enum5 {
@@ -443,6 +528,7 @@ following code:
         }
 
     }
+
 
 ### Generated Exports
 
@@ -454,7 +540,7 @@ following code:
     // Changes to this file may cause incorrect behavior and will be lost if
     // the code is regenerated.
     //
-    // 2016-12-02 13:01:17Z
+    // 2017-04-27 09:25:08Z
     // https://github.com/geniussportsgroup/Signalr.Hubs.TypeScriptGenerator
     //
     // </auto-generated>
@@ -472,7 +558,7 @@ following code:
             /*
              * @deprecated Do not use this value. Defined for backward compatibility.
              */
-            Three = 303,
+            oneAndTwo = 303,
         }
 
         export enum Enum5 {

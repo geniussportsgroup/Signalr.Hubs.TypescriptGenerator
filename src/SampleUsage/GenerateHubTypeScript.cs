@@ -15,7 +15,8 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.SampleUsage
 					@"../jquery/index.d.ts")
 				.WithStrictTypes(NotNullableTypeDiscovery.UseRequiredAttribute)
 				.WithOptionalMembers(OptionalMemberGenerationMode.UseDataMemberAttribute)
-				.WithIncludedTypes(IncludedTypesDiscovery.UseKnownTypeAttribute);
+				.WithIncludedTypes(IncludedTypesDiscovery.UseKnownTypeAttribute)
+				.WithEnumMemberNameMappingMode(EnumMemberNameMappingMode.EnumMemberAttributeValue);
 			var typeScript = hubTypeScriptGenerator.Generate(options);
 
 			System.Console.WriteLine(typeScript.Item1);

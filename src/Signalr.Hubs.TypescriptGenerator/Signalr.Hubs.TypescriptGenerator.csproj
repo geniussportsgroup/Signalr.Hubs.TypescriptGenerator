@@ -83,6 +83,7 @@
     <Compile Include="Helpers\MethodDescriptorExtensions.cs" />
     <Compile Include="Helpers\TypeInfo.cs" />
     <Compile Include="Helpers\TypeKind.cs" />
+    <Compile Include="EnumMemberNameMappingMode.cs" />
     <Compile Include="Models\ClientInfo.cs" />
     <Compile Include="Models\EnumMemberInfo.cs" />
     <Compile Include="Models\MemberInfo.cs" />

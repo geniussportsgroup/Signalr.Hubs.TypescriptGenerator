@@ -55,6 +55,10 @@
       <Project>{B68600AA-F2AE-4EBF-9AF5-DEF252E71142}</Project>
       <Name>Signalr.Hubs.TypeScriptGenerator.Console</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Signalr.Hubs.TypeScriptGenerator\Signalr.Hubs.TypeScriptGenerator.csproj">
+      <Project>{C90F8C7B-213B-4CD0-A9F0-3A39634CECDE}</Project>
+      <Name>Signalr.Hubs.TypeScriptGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

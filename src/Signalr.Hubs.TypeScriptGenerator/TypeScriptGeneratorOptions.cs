@@ -42,6 +42,11 @@
 		/// </summary>
 		public IncludedTypesDiscovery IncludedTypesDiscovery { get; }
 
+		/// <summary>
+		/// Specifies the method used to map .NET model enum member names to names of enum members in generated typings.
+		/// </summary>
+		public EnumMemberNameMappingMode EnumMemberNameMappingMode { get; }
+
 		private TypeScriptGeneratorOptions()
 		{
 		}
@@ -51,13 +56,15 @@
 			OptionalMemberGenerationMode optionalMemberGenerationMode, 
 			bool generateStrictTypes, 
 			NotNullableTypeDiscovery notNullableTypeDiscovery,
-			IncludedTypesDiscovery includedTypesDiscovery)
+			IncludedTypesDiscovery includedTypesDiscovery,
+			EnumMemberNameMappingMode enumMemberNameMappingMode)
 		{
 			ReferencePaths = referencePaths;
 			OptionalMemberGenerationMode = optionalMemberGenerationMode;
 			GenerateStrictTypes = generateStrictTypes;
 			NotNullableTypeDiscovery = notNullableTypeDiscovery;
 			IncludedTypesDiscovery = includedTypesDiscovery;
+			EnumMemberNameMappingMode = enumMemberNameMappingMode;
 		}
 
 		/// <summary>
@@ -73,7 +80,8 @@
 				OptionalMemberGenerationMode,
 				GenerateStrictTypes,
 				NotNullableTypeDiscovery,
-				IncludedTypesDiscovery);
+				IncludedTypesDiscovery,
+				EnumMemberNameMappingMode);
 		}
 
 		public TypeScriptGeneratorOptions WithOptionalMembers(
@@ -84,7 +92,8 @@
 				requiredMemberDiscovery,
 				GenerateStrictTypes,
 				NotNullableTypeDiscovery,
-				IncludedTypesDiscovery);
+				IncludedTypesDiscovery,
+				EnumMemberNameMappingMode);
 		}
 
 		public TypeScriptGeneratorOptions WithStrictTypes(
@@ -95,7 +104,8 @@
 				OptionalMemberGenerationMode,
 				true,
 				notNullableTypeDiscovery,
-				IncludedTypesDiscovery);
+				IncludedTypesDiscovery,
+				EnumMemberNameMappingMode);
 		}
 
 		public TypeScriptGeneratorOptions WithIncludedTypes(
@@ -106,7 +116,19 @@
 				OptionalMemberGenerationMode,
 				GenerateStrictTypes,
 				NotNullableTypeDiscovery,
-				includedTypesDiscovery);
+				includedTypesDiscovery,
+				EnumMemberNameMappingMode);
+		}
+		public TypeScriptGeneratorOptions WithEnumMemberNameMappingMode(
+			EnumMemberNameMappingMode enumMemberNameMappingMode)
+		{
+			return new TypeScriptGeneratorOptions(
+				ReferencePaths,
+				OptionalMemberGenerationMode,
+				GenerateStrictTypes,
+				NotNullableTypeDiscovery,
+				IncludedTypesDiscovery,
+				enumMemberNameMappingMode);
 		}
 	}
 }
