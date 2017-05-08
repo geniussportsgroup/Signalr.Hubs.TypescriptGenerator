@@ -119,7 +119,7 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 	                    return Nullable(nestedType, forceNotNullable);
 	                }
 
-	                if (typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+	                if (typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
 	                {
 	                    var elementType = GetTypeContractInfo(type.GetGenericArguments()[0]);
 	                    var arrayType = TypeInfo.Array(elementType);
@@ -160,7 +160,12 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 	                }
 	            }
 
-	            AddCustomType(type);
+                if (typeof(System.Collections.IEnumerable).IsAssignableFrom(type))
+                {
+                    return Nullable(TypeInfo.Array(TypeInfo.Any), forceNotNullable);
+                }
+
+                AddCustomType(type);
 	            return TypeInfo.Simple(GenericSpecificName(type, true));
 	        }
 	    }
@@ -275,8 +280,9 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 
 		public string GenericSpecificName(Type type, bool referencing)
 		{
-			var name = (referencing ? type.FullName : type.Name).Split('`').First();
-			if (type.IsGenericType)
+            var name = (referencing ? type.FullName : type.Name).Split('`').First();
+            name = name.Replace("+", "."); // nested classes have + instead of .
+            if (type.IsGenericType)
 			{
 				name += "_" + string.Join("_", type.GenericTypeArguments.Select(a => GenericSpecificName(a, false))) + "_";
 			}

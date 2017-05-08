@@ -107,7 +107,9 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 
 				string reasonDeprecated;
 				var isDeprecated = type.IsDeprecated(out reasonDeprecated);
-				list.Add(new DataContractInfo(typeHelper.GenericSpecificName(type, false), isDeprecated, reasonDeprecated, type.Namespace, bases, properties));
+                var fullNameWithDots = type.FullName.Replace("+", ".");
+                var moduleName = fullNameWithDots.Substring(0, fullNameWithDots.LastIndexOf('.'));
+				list.Add(new DataContractInfo(typeHelper.GenericSpecificName(type, false), isDeprecated, reasonDeprecated, moduleName, bases, properties));
 				typeHelper.DiscoverAdditionalTypes(type);
 			}
 
