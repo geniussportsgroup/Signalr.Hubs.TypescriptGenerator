@@ -14,10 +14,15 @@
 		/// </summary>
 		public string[] ReferencePaths { get; }
 
-		/// <summary>
-		/// Indicates if and how optional contract interface members shall be generated.
-		/// </summary>
-		public OptionalMemberGenerationMode OptionalMemberGenerationMode { get; }
+        /// <summary>
+        /// Path of assembly to generate types from.
+        /// </summary>
+        public string AssemblyPath { get; }
+
+        /// <summary>
+        /// Indicates if and how optional contract interface members shall be generated.
+        /// </summary>
+        public OptionalMemberGenerationMode OptionalMemberGenerationMode { get; }
 
 		/// <summary>
 		/// Instructs to generate strict type definitions by explicitly adding <c>null</c> type to the member type 
@@ -42,10 +47,15 @@
 		/// </summary>
 		public IncludedTypesDiscovery IncludedTypesDiscovery { get; }
 
-		/// <summary>
-		/// Specifies the method used to map .NET model enum member names to names of enum members in generated typings.
-		/// </summary>
-		public EnumMemberNameMappingMode EnumMemberNameMappingMode { get; }
+        /// <summary>
+        /// Indicates to include all types marked with [DataContract] attribute.
+        /// </summary>
+        public bool IncludeAllDataContracts { get; }
+
+        /// <summary>
+        /// Specifies the method used to map .NET model enum member names to names of enum members in generated typings.
+        /// </summary>
+        public EnumMemberNameMappingMode EnumMemberNameMappingMode { get; }
 
 		private TypeScriptGeneratorOptions()
 		{
@@ -57,7 +67,9 @@
 			bool generateStrictTypes, 
 			NotNullableTypeDiscovery notNullableTypeDiscovery,
 			IncludedTypesDiscovery includedTypesDiscovery,
-			EnumMemberNameMappingMode enumMemberNameMappingMode)
+			EnumMemberNameMappingMode enumMemberNameMappingMode,
+            bool includeAllDataContracts,
+            string assemblyPath)
 		{
 			ReferencePaths = referencePaths;
 			OptionalMemberGenerationMode = optionalMemberGenerationMode;
@@ -65,6 +77,8 @@
 			NotNullableTypeDiscovery = notNullableTypeDiscovery;
 			IncludedTypesDiscovery = includedTypesDiscovery;
 			EnumMemberNameMappingMode = enumMemberNameMappingMode;
+		    IncludeAllDataContracts = includeAllDataContracts;
+		    AssemblyPath = assemblyPath;
 		}
 
 		/// <summary>
@@ -81,7 +95,9 @@
 				GenerateStrictTypes,
 				NotNullableTypeDiscovery,
 				IncludedTypesDiscovery,
-				EnumMemberNameMappingMode);
+				EnumMemberNameMappingMode,
+                IncludeAllDataContracts,
+                AssemblyPath);
 		}
 
 		public TypeScriptGeneratorOptions WithOptionalMembers(
@@ -93,7 +109,9 @@
 				GenerateStrictTypes,
 				NotNullableTypeDiscovery,
 				IncludedTypesDiscovery,
-				EnumMemberNameMappingMode);
+				EnumMemberNameMappingMode,
+                IncludeAllDataContracts,
+                AssemblyPath);
 		}
 
 		public TypeScriptGeneratorOptions WithStrictTypes(
@@ -105,7 +123,9 @@
 				true,
 				notNullableTypeDiscovery,
 				IncludedTypesDiscovery,
-				EnumMemberNameMappingMode);
+				EnumMemberNameMappingMode,
+                IncludeAllDataContracts,
+                AssemblyPath);
 		}
 
 		public TypeScriptGeneratorOptions WithIncludedTypes(
@@ -117,7 +137,9 @@
 				GenerateStrictTypes,
 				NotNullableTypeDiscovery,
 				includedTypesDiscovery,
-				EnumMemberNameMappingMode);
+				EnumMemberNameMappingMode,
+                IncludeAllDataContracts,
+                AssemblyPath);
 		}
 		public TypeScriptGeneratorOptions WithEnumMemberNameMappingMode(
 			EnumMemberNameMappingMode enumMemberNameMappingMode)
@@ -128,7 +150,35 @@
 				GenerateStrictTypes,
 				NotNullableTypeDiscovery,
 				IncludedTypesDiscovery,
-				enumMemberNameMappingMode);
+				enumMemberNameMappingMode,
+                IncludeAllDataContracts, 
+                AssemblyPath);
 		}
-	}
+
+        public TypeScriptGeneratorOptions WithAllDataContracts()
+        {
+            return new TypeScriptGeneratorOptions(
+                ReferencePaths,
+                OptionalMemberGenerationMode,
+                GenerateStrictTypes,
+                NotNullableTypeDiscovery,
+                IncludedTypesDiscovery,
+                EnumMemberNameMappingMode,
+                true,
+                AssemblyPath);
+        }
+
+        public TypeScriptGeneratorOptions WithAssemblyPath(string assemblyPath)
+        {
+            return new TypeScriptGeneratorOptions(
+                ReferencePaths,
+                OptionalMemberGenerationMode,
+                GenerateStrictTypes,
+                NotNullableTypeDiscovery,
+                IncludedTypesDiscovery,
+                EnumMemberNameMappingMode,
+                IncludeAllDataContracts,
+                assemblyPath);
+        }
+    }
 }

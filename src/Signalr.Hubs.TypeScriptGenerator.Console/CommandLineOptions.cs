@@ -28,7 +28,10 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console
 		[Option('i', "includeTypes", HelpText = "Specifies methods to discover additional types to be included. KnownTypeAttribute - include classes declared with [KnownType] attribute.", Required = false)]
 		public string IncludeTypes { get; set; }
 
-		[Option('e', "enumMemberMames", HelpText = "If specified,indicates method to map enum member names. Valid values: Default,CamelCase,LowerCase,UpperCase,EnumMemberAttribute.", Required = false, DefaultValue= "Default")]
+        [Option('d', "includeAllDataContracts", HelpText = "Optional. If specified will include all types marked with [DataContract] attribute.", Required = false)]
+        public bool IncludeAllDataContracts { get; set; }
+
+        [Option('e', "enumMemberNames", HelpText = "If specified,indicates method to map enum member names. Valid values: Default,CamelCase,LowerCase,UpperCase,EnumMemberAttribute.", Required = false, DefaultValue= "Default")]
 		public string EnumMemberNameMapMode { get; set; }
 
 		[HelpOption]
@@ -86,7 +89,7 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console
 				case "knowntypeattribute":
 					return IncludedTypesDiscovery.UseKnownTypeAttribute;
 
-				default:
+                default:
 					throw new NotSupportedException($"Specified included types discovery option is not supported: {IncludeTypes}");
 			}
 		}
