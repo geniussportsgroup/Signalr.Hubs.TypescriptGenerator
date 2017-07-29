@@ -1,9 +1,20 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/uwhg9nwo62kx2fif?svg=true)](https://ci.appveyor.com/project/cjbhaines/signalr-hubs-typescriptgenerator)
 
 # Signalr.Hubs.TypeScriptGenerator
-Utility library for generating typescript definitions for Signalr Hubs. This is a fork of [yetanotherchris/SignalrTypeScriptGenerator](https://github.com/yetanotherchris/SignalrTypeScriptGenerator "SignalrTypeScriptGenerator") by [yetanotherchris](https://github.com/yetanotherchris "yetanotherchris"). I have split the packages up into a referenced library and a console app.
+Utility library for generating typescript definitions for Signalr Hubs. This is a fork 
+of [yetanotherchris/SignalrTypeScriptGenerator](https://github.com/yetanotherchris/SignalrTypeScriptGenerator "SignalrTypeScriptGenerator") 
+by [yetanotherchris](https://github.com/yetanotherchris "yetanotherchris"). I have split the packages up into 
+a referenced library and a console app.
 
-Our usage at Genius Sports is to generate the Hub proxies at build time using our [geniussportsgroup/SignalR.ProxyGenerator](https://github.com/geniussportsgroup/SignalR.ProxyGenerator "Proxy Generator") publishing them to our internal NPM feed. We then use this tool to generate TypeScript definitions our those proxies again publishing them to our internal NPM feed. This allows our UI developers to get strongly typed Hub APIs and allows us to do proper Continous Integrtaion between the back end and front end. Move quickly and break fast.
+Our usage at Genius Sports is to generate the Hub proxies at build time using our 
+[geniussportsgroup/SignalR.ProxyGenerator](https://github.com/geniussportsgroup/SignalR.ProxyGenerator "Proxy Generator") 
+publishing them to our internal NPM feed. We then use this tool to generate TypeScript definitions our those proxies 
+again publishing them to our internal NPM feed. This allows our UI developers to get strongly typed Hub APIs and allows 
+us to do proper Continous Integrtaion between the back end and front end. Move quickly and break fast.
+
+**NOTE:** Hub classes are retreived using *HubManager.GetHubs()* method which won't find any if assembly was build 
+using different version of *Microsoft.AspNet.SignalR.Core*. This was observed after we switched from Microsoft.AspNet.SignalR
+version 2.2.0 to 2.2.2.
 
 ## Features
 - Interfaces generated for all data contracts used in the Hub methods arguments.
