@@ -32,7 +32,8 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console
 			{
 				System.Console.WriteLine("Error generating TypeScript");
 				System.Console.WriteLine(e);
-				return 1;
+                System.Console.ReadKey();
+                return 1;
 			}
 		}
 
@@ -77,7 +78,13 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Console
 			if (!string.IsNullOrEmpty(commandLineOptions.References))
 				options = options.WithReferencePaths(commandLineOptions.References);
 
-			return options;
+            if (commandLineOptions.IncludeAllDataContracts)
+                options = options.WithAllDataContracts();
+
+            if (!string.IsNullOrEmpty(commandLineOptions.AssemblyPath))
+                options = options.WithAssemblyPath(commandLineOptions.AssemblyPath);
+
+            return options;
 
 		}
 

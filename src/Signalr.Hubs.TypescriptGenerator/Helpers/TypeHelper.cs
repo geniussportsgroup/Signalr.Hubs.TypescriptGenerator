@@ -203,7 +203,7 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 					}
 					break;
 
-				default:
+                default:
 					throw new NotSupportedException($"Specified additional types discovery method is not supported: {Options.IncludedTypesDiscovery}.");
 			}
 		}
@@ -335,5 +335,25 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 			var modelType = GetTypeContractInfo(parameter.ParameterType);
 			return new MemberTypeInfo(parameter.Name, modelType.Name);
 		}
-	}
+
+        public void DiscoverDataContracts()
+        {
+            if (Options.IncludeAllDataContracts)
+                FindAllTypesWithDataContractAttribute();
+        }
+
+        private void FindAllTypesWithDataContractAttribute()
+        {
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.Location == Options.AssemblyPath);
+            if (assembly == null)
+                return;
+
+            var dtos = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttributes(typeof(DataContractAttribute), false).Any()).ToList();
+
+            foreach (var dto in dtos)
+            {
+                AddCustomType(dto);
+            }
+        }
+    }
 }

@@ -88,6 +88,8 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 		{
 			var list = new List<DataContractInfo>();
 
+		    typeHelper.DiscoverDataContracts();
+
 			while (typeHelper.InterfaceTypes.Count != 0)
 			{
 				var type = typeHelper.InterfaceTypes.Dequeue();
@@ -171,5 +173,5 @@ namespace GeniusSports.Signalr.Hubs.TypeScriptGenerator.Helpers
 				memberName, isDeprecated, reasonDeprecated,
 				enumMember.GetRawConstantValue());
 		}
-	}
+    }
 }
