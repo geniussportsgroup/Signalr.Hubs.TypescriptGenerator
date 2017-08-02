@@ -41,30 +41,30 @@
 interface SignalR {
 @foreach (MemberTypeInfo type in Model.Hubs) {
 	@WriteDeprecatedComment(type, 1)
-	<text>@(type.Name) : @(type.TypeScriptType);</text>
+	<text>@(type.Name): @(type.TypeScriptType);</text>
 }
 }
 
 // Service contracts
 @foreach (var grouping in Model.ServiceContracts.GroupBy(x => x.ModuleName)) {
 <text>
-declare module @grouping.Key {
+declare namespace @grouping.Key {
 @foreach (var serviceInfo in grouping) {
 	@WriteDeprecatedComment(serviceInfo, 1)
 	<text>interface @serviceInfo.Name {
-		server : @(serviceInfo.ServerFullType);
+		server: @(serviceInfo.ServerFullType);
 		@if (serviceInfo.ClientType == "any")
 		{
 		<text> // TODO: Hub does not have a Client Interface as a generic argument - it is recommended to add one.</text>
 		}
-		client : @Raw(serviceInfo.ClientType);
+		client: @Raw(serviceInfo.ClientType);
 	}
 </text>
 	@WriteDeprecatedComment(serviceInfo, 1)
 	<text>interface @serviceInfo.ServerType {
 	@foreach (var functionDetails in serviceInfo.Methods) {
 		@WriteDeprecatedComment(functionDetails, 2)
-		<text>@Raw(functionDetails.Name + functionDetails.Arguments) : @Raw(functionDetails.ReturnType);</text>
+		<text>@Raw(functionDetails.Name + functionDetails.Arguments): @Raw(functionDetails.ReturnType);</text>
 	}
 	}
 </text>
@@ -75,13 +75,13 @@ declare module @grouping.Key {
 // Clients
 @foreach (var grouping in Model.Clients.GroupBy(x => x.ModuleName)) {
 <text>
-declare module @grouping.Key {
+declare namespace @grouping.Key {
 @foreach (var clientInfo in grouping) {
 	@WriteDeprecatedComment(clientInfo, 1)
 	<text>interface @clientInfo.Name {
 	@foreach (var functionDetails in clientInfo.Methods) {
 		@WriteDeprecatedComment(functionDetails, 2)
-		<text>@Raw(functionDetails.Name) : @Raw(functionDetails.Arguments) => void;</text>
+		<text>@Raw(functionDetails.Name): @Raw(functionDetails.Arguments) => void;</text>
 	}
 	}
 </text>
@@ -91,15 +91,15 @@ declare module @grouping.Key {
 
 // Data contracts
 @foreach (var grouping in Model.DataContracts.GroupBy(x => x.ModuleName)) {
-<text>declare module @grouping.Key {
+<text>declare namespace @grouping.Key {
 @foreach (var dataContractInfo in grouping) {
-	var openBrace = string.IsNullOrEmpty(dataContractInfo.ExtendsDeclaration) ? "{" : " {";
+	var openBrace = string.IsNullOrEmpty(dataContractInfo.ExtendsDeclaration) ? "{": " {";
 	@WriteDeprecatedComment(dataContractInfo, 1)
 	<text>interface @dataContractInfo.Name @dataContractInfo.ExtendsDeclaration@(openBrace)
 	@foreach (MemberTypeInfo property in dataContractInfo.Properties)
 	{
 		@WriteDeprecatedComment(property, 2)
-		<text>@Raw(property.DeclaredName) : @Raw(property.TypeScriptType);</text>
+		<text>@Raw(property.DeclaredName): @Raw(property.TypeScriptType);</text>
 	}
 	}
 </text>
@@ -111,7 +111,7 @@ declare module @grouping.Key {
 @foreach (var grouping in Model.Enums.GroupBy(x => x.ModuleName))
 {
 <text>
-declare module @grouping.Key {
+declare namespace @grouping.Key {
 @foreach (EnumInfo enumInfo in grouping) {
 	@WriteDeprecatedComment(enumInfo, 1)
 	<text>enum @enumInfo.Name {
